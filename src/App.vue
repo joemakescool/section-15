@@ -13,6 +13,12 @@
       </label>
     </div>
 
+    <div class="form-group">
+      <label> Get the node
+        <input type="text" class="form-control" v-model="node">
+      </label>
+    </div>
+
     <button class="btn btn-primary" v-on:click="submit">SUBMIT</button>
     <hr>
     <button class="btn-dark" @click="fetchData">GET DATA</button>
@@ -39,17 +45,19 @@ export default {
     },
 
     users: [],
-    resource: {}
+    resource: {},
+    node: 'data'
 
   }),
 
   methods: {
     created() {
       const customActions = {
-        saveAlt: {method: 'POST', url: 'alternative.json'}
+        saveAlt: {method: 'POST', url: 'alternative.json'},
+        getData: {method: 'GET', }
       };
 
-      this.resource = this.$resource('data.json', {}, customActions);
+      this.resource = this.$resource('{node}.json', {}, customActions);
     },
 
     submit() {
@@ -69,21 +77,24 @@ export default {
     },
 
     fetchData() {
-      this.$http.get('data.json')
-              .then( (response)=> {
-                return response.json(); // from vue-resource, gives back a promise
-              }).
-              then((data)=> {
-        // eslint-disable-next-line no-console
-                console.log(data); // Promise object extracted
-                const resultsArray = [];
-                for (let key in data) {
-                  resultsArray.push(data[key]);
-                }
-                this.users = resultsArray;
-        // eslint-disable-next-line no-console
-                console.log(this.users);
-      });
+      // this.$http.get('data.json')
+      //         .then( (response)=> {
+      //           return response.json(); // from vue-resource, gives back a promise
+      //         }).
+      //         then((data)=> {
+      //   // eslint-disable-next-line no-console
+      //           console.log(data); // Promise object extracted
+      //           const resultsArray = [];
+      //           for (let key in data) {
+      //             resultsArray.push(data[key]);
+      //           }
+      //           this.users = resultsArray;
+      //   // eslint-disable-next-line no-console
+      //           console.log(this.users);
+      // });
+
+      this.resource.getData({node: this.node})
+              .then();
     },
 
   },
